@@ -54,7 +54,7 @@ setIsLoading(false)
           </div>
           <h1>{post.title}</h1>
           <div className="post-detail_thumbnail">
-            <img src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${post.thumbnail}`} alt="" />
+            <img src={`${post.thumbnail}`} alt="" />
           </div>
           <p dangerouslySetInnerHTML={{__html:post.description}}></p>
         </div>
