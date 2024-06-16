@@ -19,6 +19,7 @@ const CreatePost = () => {
   const [thumbnail, setThumbnail] = useState(undefined)
   const [thumbnailUrl, setThumbnailUrl] = useState('')
   const [error, setError] = useState('')
+  const [imgPerc, setImgPerc] = useState(0);
 
   const navigate = useNavigate();
   const { currentUser } = useContext(UserContext)
@@ -50,7 +51,7 @@ const CreatePost = () => {
 
   const POST_CATEGORIES = ["Agriculture", "Business", "Education", "Entertainment", "Art", "Investment", "Uncategorized", "Weather"]
 
-  const uploadFile = (file,urlType) => {
+  const uploadFile = (file) => {
     const storage = getStorage(app);
     console.log("ab");
     const fileName = new Date().getTime() + file?.name;
@@ -64,7 +65,7 @@ const CreatePost = () => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log("Upload is " + progress + "% done");
-        // urlType==='imgUrl'?setImgPerc(Math.round(progress)):setVideoPerc(Math.round(progress))
+        setImgPerc(Math.round(progress));
         switch (snapshot.state) {
           case "paused":
             console.log("Upload is paused");
@@ -100,12 +101,13 @@ const CreatePost = () => {
       if (response.status === 201) {
         return navigate('/')
       }
+      setThumbnailUrl('');
     } catch (err) {
       setError(err.response.data.message)
     }
   }
   useEffect(() => {
-    thumbnail && uploadFile(thumbnail,"thumbnailUrl");
+    thumbnail && uploadFile(thumbnail);
   }, [thumbnail]);
 
 
@@ -123,8 +125,11 @@ const CreatePost = () => {
           }
         </select>
         <ReactQuill modules={modules} formats={formats} value={description} onChange={setDescription} />
-        <input type='file' onChange={e => setThumbnail(e.target.files[0])} accept='png , jpg,jpeg' />
-        <button type='submit' className='btn primary'>Create</button>
+        {imgPerc > 0 ? ("uploading " + imgPerc + " %") : <input type='file' onChange={e => setThumbnail(e.target.files[0])} accept='png , jpg,jpeg' />}
+        {!thumbnailUrl && <button type="submit" className="btn btn-primary" disabled={true}>Create</button>}
+        {thumbnailUrl && <button type="submit" className="btn btn-secondary ">
+          Create
+        </button>}
       </form>
     </section>
   )
