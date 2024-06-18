@@ -9,7 +9,7 @@ const upload=require('express-fileupload')
 
 const app = express();
 const corsOptions = {
-  origin: 'http://localhost:3000', // Replace with your client URL
+  origin: 'https://blog-app-ul1r.vercel.app', // Replace with your client URL
   credentials: true,
 };
 app.use(cors(corsOptions));
